@@ -31,7 +31,7 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
 
     @Override
     public SubscriptionType create(SubscriptionType subscriptionType) {
-        return null;
+        return subscriptionTypeRepository.save(subscriptionType);
     }
 
     @Override
