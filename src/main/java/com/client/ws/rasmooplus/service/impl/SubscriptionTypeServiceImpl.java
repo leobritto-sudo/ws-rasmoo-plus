@@ -3,6 +3,7 @@ package com.client.ws.rasmooplus.service.impl;
 import com.client.ws.rasmooplus.dto.SubscriptionTypeDTO;
 import com.client.ws.rasmooplus.exception.BadRequestException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
+import com.client.ws.rasmooplus.mapper.SubscriptionTypeMapper;
 import com.client.ws.rasmooplus.model.SubscriptionType;
 import com.client.ws.rasmooplus.repository.SubscriptionTypeRepository;
 import com.client.ws.rasmooplus.service.SubscriptionTypeService;
@@ -33,31 +34,14 @@ public class SubscriptionTypeServiceImpl implements SubscriptionTypeService {
         if (Objects.nonNull(subscriptionTypeDTO.getId())) {
             throw new BadRequestException("O Id deve ser nulo");
         }
-
-        SubscriptionType subscriptionType = SubscriptionType.builder()
-                .id(subscriptionTypeDTO.getId())
-                .name(subscriptionTypeDTO.getName())
-                .accessMonth(subscriptionTypeDTO.getAccessMonth())
-                .price(subscriptionTypeDTO.getPrice())
-                .productKey(subscriptionTypeDTO.getProductKey())
-                .build();
-
-        return subscriptionTypeRepository.save(subscriptionType);
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(subscriptionTypeDTO));
     }
 
     @Override
     public SubscriptionType update(Long id, SubscriptionTypeDTO subscriptionTypeDTO) {
         getSubscriptionType(id);
-
-        SubscriptionType subscriptionType = SubscriptionType.builder()
-                .id(id)
-                .name(subscriptionTypeDTO.getName())
-                .accessMonth(subscriptionTypeDTO.getAccessMonth())
-                .price(subscriptionTypeDTO.getPrice())
-                .productKey(subscriptionTypeDTO.getProductKey())
-                .build();
-
-        return subscriptionTypeRepository.save(subscriptionType);
+        subscriptionTypeDTO.setId(id);
+        return subscriptionTypeRepository.save(SubscriptionTypeMapper.fromDtoToEntity(subscriptionTypeDTO));
     }
 
     @Override
