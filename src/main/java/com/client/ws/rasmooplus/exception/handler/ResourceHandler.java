@@ -5,8 +5,14 @@ import com.client.ws.rasmooplus.exception.BadRequestException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ResourceHandler {
@@ -32,6 +38,24 @@ public class ResourceHandler {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(message)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorExceptionDTO);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorExceptionDTO> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        Map<String, String> messages = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach(objectError -> {
+            String field = ((FieldError) objectError).getField();
+            String message = objectError.getDefaultMessage();
+            messages.put(field, message);
+        });
+
+        ErrorExceptionDTO errorExceptionDTO = ErrorExceptionDTO.builder()
+                .message(Arrays.toString(messages.entrySet().toArray()))
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorExceptionDTO);
