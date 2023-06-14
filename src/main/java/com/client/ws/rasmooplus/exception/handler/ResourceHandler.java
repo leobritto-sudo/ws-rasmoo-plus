@@ -3,6 +3,7 @@ package com.client.ws.rasmooplus.exception.handler;
 import com.client.ws.rasmooplus.dto.error.ErrorExceptionDTO;
 import com.client.ws.rasmooplus.exception.BadRequestException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -32,6 +33,19 @@ public class ResourceHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorExceptionDTO> badRequestException(BadRequestException e) {
+        String message = e.getMessage();
+
+        ErrorExceptionDTO errorExceptionDTO = ErrorExceptionDTO.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(message)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorExceptionDTO);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorExceptionDTO> badRequestException(DataIntegrityViolationException e) {
         String message = e.getMessage();
 
         ErrorExceptionDTO errorExceptionDTO = ErrorExceptionDTO.builder()
