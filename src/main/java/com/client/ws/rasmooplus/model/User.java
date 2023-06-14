@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -26,7 +27,7 @@ public class User implements Serializable {
     private String cpf;
 
     @Column(name = "dt_subscription")
-    private LocalDateTime dtSubscription = LocalDateTime.now();
+    private LocalDateTime dtSubscription;
 
     @Column(name = "dt_expiration")
     private LocalDateTime dtExpiration;
