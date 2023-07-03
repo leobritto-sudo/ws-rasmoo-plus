@@ -4,6 +4,9 @@ import com.client.ws.rasmooplus.dto.wsraspay.CustomerDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.OrderDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.PaymentDTO;
 import com.client.ws.rasmooplus.integration.WsRaspayIntegration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +20,15 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     @Override
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
-        return null;
+        try {
+            HttpEntity<CustomerDTO> request = new HttpEntity<>(customerDTO);
+            ResponseEntity<CustomerDTO> response =
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/customer", HttpMethod.POST, request, CustomerDTO.class);
+
+            return response.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
