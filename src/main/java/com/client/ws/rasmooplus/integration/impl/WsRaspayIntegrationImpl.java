@@ -37,7 +37,15 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        return null;
+        try {
+            HttpEntity<OrderDTO> request = new HttpEntity<>(orderDTO, this.headers);
+            ResponseEntity<OrderDTO> response =
+                    restTemplate.exchange("http://localhost:8081/ws-raspay/v1/order", HttpMethod.POST, request, OrderDTO.class);
+
+            return response.getBody();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
