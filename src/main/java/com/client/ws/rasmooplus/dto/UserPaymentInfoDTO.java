@@ -37,5 +37,5 @@ public class UserPaymentInfoDTO {
     private LocalDateTime dtPayment = LocalDateTime.now();
 
     @NotNull(message = "Não deve ser nulo")
-    private Long user;
+    private Long userId;
 }
