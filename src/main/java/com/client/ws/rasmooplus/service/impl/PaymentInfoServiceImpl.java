@@ -6,6 +6,7 @@ import com.client.ws.rasmooplus.dto.wsraspay.OrderDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.PaymentDTO;
 import com.client.ws.rasmooplus.exception.BusinessException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
+import com.client.ws.rasmooplus.integration.MailIntegration;
 import com.client.ws.rasmooplus.integration.WsRaspayIntegration;
 import com.client.ws.rasmooplus.mapper.UserPaymentInfoMapper;
 import com.client.ws.rasmooplus.mapper.wsraspay.CreditCardMapper;
@@ -29,6 +30,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     @Autowired private UserPaymentInfoRepository userPaymentInfoRepository;
 
     @Autowired private WsRaspayIntegration wsRaspayIntegration;
+
+    @Autowired private MailIntegration mailIntegration;
 
     @Override
     public Boolean process(PaymentProcessDTO paymentProcessDTO) {
@@ -56,6 +59,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         if (Boolean.TRUE.equals(wsRaspayIntegration.processPayment(paymentDTO))) {
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(paymentProcessDTO.getUserPaymentInfoDTO(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
+
+            // Envia e-mail
+            String message = "Parabéns, seu acesso foi liberado\n\n" +
+                    "Seguem seus dados para entrar na plataforma\n" +
+                    "Usuário" + user.getEmail() + "\n" +
+                    "Senha: alunorasmoo";
+            mailIntegration.send(user.getEmail(), message, "ACESSO LIBERADO!");
         }
 
         return null;
