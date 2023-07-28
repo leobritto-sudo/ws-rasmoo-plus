@@ -63,7 +63,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             // Envia e-mail
             String message = "Parabéns, seu acesso foi liberado\n\n" +
                     "Seguem seus dados para entrar na plataforma\n" +
-                    "Usuário" + user.getEmail() + "\n" +
+                    "Usuário: " + user.getEmail() + "\n" +
                     "Senha: alunorasmoo";
             mailIntegration.send(user.getEmail(), message, "ACESSO LIBERADO!");
 
