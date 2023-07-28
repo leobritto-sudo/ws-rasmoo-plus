@@ -66,8 +66,10 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     "Usuário" + user.getEmail() + "\n" +
                     "Senha: alunorasmoo";
             mailIntegration.send(user.getEmail(), message, "ACESSO LIBERADO!");
+
+            return true;
         }
 
-        return null;
+        return false;
     }
 }

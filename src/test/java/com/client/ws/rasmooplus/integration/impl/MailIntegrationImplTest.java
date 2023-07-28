@@ -19,6 +19,6 @@ class MailIntegrationImplTest {
 
     @Test
     void createCustomerWhenOK() {
-        mailIntegration.send("littocraft@gmail.com", "Olá Leo!");
+        mailIntegration.send("littocraft@gmail.com", "Olá Leo!", "Acesso liberado");
     }
 }
