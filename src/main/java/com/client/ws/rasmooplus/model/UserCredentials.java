@@ -13,10 +13,10 @@ import java.util.List;
 public class UserCredentials implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_credentials_id")
     private Long id;
 
-    @Column(name = "user_name")
-    private String userName;
+    private String username;
 
     private String password;
 
@@ -38,7 +38,7 @@ public class UserCredentials implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
