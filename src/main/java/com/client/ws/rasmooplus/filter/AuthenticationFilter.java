@@ -1,5 +1,6 @@
 package com.client.ws.rasmooplus.filter;
 
+import com.client.ws.rasmooplus.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,9 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
+
+    private final TokenService tokenService;
+
+    public AuthenticationFilter(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getBearerToken(request);
+
+        if (tokenService.isValid(token)) {
+
+        }
+
         filterChain.doFilter(request, response);
     }
 
