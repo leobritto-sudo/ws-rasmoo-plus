@@ -1,7 +1,9 @@
 package com.client.ws.rasmooplus.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user_credentials")
 public class UserCredentials implements UserDetails {
     @Id

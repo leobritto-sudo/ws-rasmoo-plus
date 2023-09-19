@@ -14,14 +14,19 @@ import com.client.ws.rasmooplus.mapper.wsraspay.CustomerMapper;
 import com.client.ws.rasmooplus.mapper.wsraspay.OrderMapper;
 import com.client.ws.rasmooplus.mapper.wsraspay.PaymentMapper;
 import com.client.ws.rasmooplus.model.User;
+import com.client.ws.rasmooplus.model.UserCredentials;
 import com.client.ws.rasmooplus.model.UserPaymentInfo;
+import com.client.ws.rasmooplus.model.UserType;
+import com.client.ws.rasmooplus.repository.UserDetailsRepository;
 import com.client.ws.rasmooplus.repository.UserPaymentInfoRepository;
 import com.client.ws.rasmooplus.repository.UserRepository;
+import com.client.ws.rasmooplus.repository.UserTypeRepository;
 import com.client.ws.rasmooplus.service.PaymentInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PaymentInfoServiceImpl implements PaymentInfoService {
@@ -32,6 +37,10 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     @Autowired private WsRaspayIntegration wsRaspayIntegration;
 
     @Autowired private MailIntegration mailIntegration;
+
+    @Autowired private UserDetailsRepository userDetailsRepository;
+
+    @Autowired private UserTypeRepository userTypeRepository;
 
     @Override
     public Boolean process(PaymentProcessDTO paymentProcessDTO) {
@@ -59,6 +68,15 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         if (Boolean.TRUE.equals(wsRaspayIntegration.processPayment(paymentDTO))) {
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(paymentProcessDTO.getUserPaymentInfoDTO(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
+
+            Optional<UserType> userTypeOptional = userTypeRepository.findById(3l);
+
+            if (userTypeOptional.isEmpty()) {
+                throw new NotFoundException("UserType não encontrado");
+            }
+
+            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(), "alunorasmoo", userTypeOptional.get());
+            userDetailsRepository.save(userCredentials);
 
             // Envia e-mail
             String message = "Parabéns, seu acesso foi liberado\n\n" +
