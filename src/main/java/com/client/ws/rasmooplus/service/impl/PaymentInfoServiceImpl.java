@@ -4,6 +4,7 @@ import com.client.ws.rasmooplus.dto.PaymentProcessDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.CustomerDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.OrderDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.PaymentDTO;
+import com.client.ws.rasmooplus.enums.UserTypeEnum;
 import com.client.ws.rasmooplus.exception.BusinessException;
 import com.client.ws.rasmooplus.exception.NotFoundException;
 import com.client.ws.rasmooplus.integration.MailIntegration;
@@ -23,6 +24,8 @@ import com.client.ws.rasmooplus.repository.UserRepository;
 import com.client.ws.rasmooplus.repository.UserTypeRepository;
 import com.client.ws.rasmooplus.service.PaymentInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -41,6 +44,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     @Autowired private UserDetailsRepository userDetailsRepository;
 
     @Autowired private UserTypeRepository userTypeRepository;
+
+    @Value("${webservices.rasplus.default.password}")
+    private String defaultPass;
 
     @Override
     public Boolean process(PaymentProcessDTO paymentProcessDTO) {
@@ -69,20 +75,20 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             UserPaymentInfo userPaymentInfo = UserPaymentInfoMapper.fromDtoToEntity(paymentProcessDTO.getUserPaymentInfoDTO(), user);
             userPaymentInfoRepository.save(userPaymentInfo);
 
-            Optional<UserType> userTypeOptional = userTypeRepository.findById(3l);
+            Optional<UserType> userTypeOptional = userTypeRepository.findById(UserTypeEnum.ALUNO.getId());
 
             if (userTypeOptional.isEmpty()) {
                 throw new NotFoundException("UserType não encontrado");
             }
 
-            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(), "alunorasmoo", userTypeOptional.get());
+            UserCredentials userCredentials = new UserCredentials(null, user.getEmail(), new BCryptPasswordEncoder().encode(defaultPass), userTypeOptional.get());
             userDetailsRepository.save(userCredentials);
 
             // Envia e-mail
             String message = "Parabéns, seu acesso foi liberado\n\n" +
                     "Seguem seus dados para entrar na plataforma\n" +
                     "Usuário: " + user.getEmail() + "\n" +
-                    "Senha: alunorasmoo";
+                    "Senha: " + defaultPass;
             mailIntegration.send(user.getEmail(), message, "ACESSO LIBERADO!");
 
             return true;
