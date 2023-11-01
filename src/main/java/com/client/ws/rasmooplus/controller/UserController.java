@@ -1,7 +1,7 @@
 package com.client.ws.rasmooplus.controller;
 
 import com.client.ws.rasmooplus.dto.UserDTO;
-import com.client.ws.rasmooplus.model.User;
+import com.client.ws.rasmooplus.model.jpa.User;
 import com.client.ws.rasmooplus.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +21,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
+    }
+
+    @PostMapping("/send-recovery-code")
+    public ResponseEntity<?> sendRecoveryCode(@RequestBody Object email) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.sendRecoveryCode(null));
     }
 }

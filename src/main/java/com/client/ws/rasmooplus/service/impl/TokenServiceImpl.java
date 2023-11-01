@@ -1,6 +1,6 @@
 package com.client.ws.rasmooplus.service.impl;
 
-import com.client.ws.rasmooplus.model.UserCredentials;
+import com.client.ws.rasmooplus.model.jpa.UserCredentials;
 import com.client.ws.rasmooplus.service.TokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

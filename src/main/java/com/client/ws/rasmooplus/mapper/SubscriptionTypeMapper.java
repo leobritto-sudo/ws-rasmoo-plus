@@ -1,7 +1,7 @@
 package com.client.ws.rasmooplus.mapper;
 
 import com.client.ws.rasmooplus.dto.SubscriptionTypeDTO;
-import com.client.ws.rasmooplus.model.SubscriptionType;
+import com.client.ws.rasmooplus.model.jpa.SubscriptionType;
 
 public class SubscriptionTypeMapper {
     public static SubscriptionType fromDtoToEntity(SubscriptionTypeDTO subscriptionTypeDTO) {

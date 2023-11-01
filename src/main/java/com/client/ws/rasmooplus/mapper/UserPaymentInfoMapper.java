@@ -1,8 +1,8 @@
 package com.client.ws.rasmooplus.mapper;
 
 import com.client.ws.rasmooplus.dto.UserPaymentInfoDTO;
-import com.client.ws.rasmooplus.model.User;
-import com.client.ws.rasmooplus.model.UserPaymentInfo;
+import com.client.ws.rasmooplus.model.jpa.User;
+import com.client.ws.rasmooplus.model.jpa.UserPaymentInfo;
 
 public class UserPaymentInfoMapper {
     public static UserPaymentInfo fromDtoToEntity(UserPaymentInfoDTO userPaymentInfoDTO, User user) {
