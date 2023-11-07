@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
@@ -14,10 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecoveryCode {
+public class UserRecoveryCode {
     @Id
     private String id;
 
+    @Indexed
     private String email;
 
     private String code;

@@ -5,6 +5,4 @@ import com.client.ws.rasmooplus.model.jpa.User;
 
 public interface UserService {
     User create(UserDTO userDTO);
-
-    Object sendRecoveryCode(String email);
 }
