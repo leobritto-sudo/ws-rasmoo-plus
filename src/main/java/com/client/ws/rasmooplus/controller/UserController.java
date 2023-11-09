@@ -19,16 +19,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDTO));
-    }
-
-    @PostMapping("/send-recovery-code")
-    public ResponseEntity<?> sendRecoveryCode(@RequestBody Object email) {
-        return ResponseEntity.status(HttpStatus.OK).body(userDetailsService.sendRecoveryCode(null));
     }
 }

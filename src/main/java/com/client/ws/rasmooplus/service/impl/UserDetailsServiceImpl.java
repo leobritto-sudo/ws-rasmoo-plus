@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public Object sendRecoveryCode(String email) {
+    public void sendRecoveryCode(String email) {
         UserRecoveryCode userRecoveryCode;
         String code = String.format("%4d", new Random().nextInt(10000));
 
@@ -58,6 +58,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         mailIntegration.send(email, "Código de recuperação: " + code, "CÓDIGO DE RECUPERAÇÃO");
-        return userRecoveryCodeRepository.save(userRecoveryCode);
+        userRecoveryCodeRepository.save(userRecoveryCode);
     }
 }

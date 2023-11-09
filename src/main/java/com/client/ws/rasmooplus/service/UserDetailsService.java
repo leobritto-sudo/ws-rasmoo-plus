@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
     UserDetails loadUserByUsername(String username);
 
-    Object sendRecoveryCode(String email);
+    void sendRecoveryCode(String email);
 }
