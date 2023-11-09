@@ -8,4 +8,6 @@ public interface UserDetailsService extends org.springframework.security.core.us
     UserDetails loadUserByUsername(String username);
 
     void sendRecoveryCode(String email);
+
+    Boolean recoveryCodeIsValid(String code, String email);
 }

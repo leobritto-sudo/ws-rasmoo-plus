@@ -60,4 +60,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         mailIntegration.send(email, "Código de recuperação: " + code, "CÓDIGO DE RECUPERAÇÃO");
         userRecoveryCodeRepository.save(userRecoveryCode);
     }
+
+    @Override
+    public Boolean recoveryCodeIsValid(String code, String email) {
+
+        var userRecoveryCodeOpt = userRecoveryCodeRepository.findByEmail(email);
+
+        if (userRecoveryCodeOpt.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+
+        UserRecoveryCode userRecoveryCode = userRecoveryCodeOpt.get();
+
+        if (userRecoveryCode.getCode().equals(code)) {
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
 }
