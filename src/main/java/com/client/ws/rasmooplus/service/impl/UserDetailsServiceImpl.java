@@ -1,7 +1,9 @@
 package com.client.ws.rasmooplus.service.impl;
 
+import com.client.ws.rasmooplus.dto.UserDetailsDto;
 import com.client.ws.rasmooplus.exception.NotFoundException;
 import com.client.ws.rasmooplus.integration.MailIntegration;
+import com.client.ws.rasmooplus.model.jpa.UserCredentials;
 import com.client.ws.rasmooplus.model.redis.UserRecoveryCode;
 import com.client.ws.rasmooplus.repository.jpa.UserDetailsRepository;
 import com.client.ws.rasmooplus.repository.redis.UserRecoveryCodeRepository;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -79,5 +82,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LocalDateTime timeout = userRecoveryCode.getCreationDate().plusMinutes(minutesTimeout);
 
         return userRecoveryCode.getCode().equals(code) && LocalDateTime.now().isBefore(timeout);
+    }
+
+    @Override
+    public void updatePasswordByRecoveryCode(UserDetailsDto userDetailsDto) {
+        if (recoveryCodeIsValid(userDetailsDto.getRecoveryCode(), userDetailsDto.getEmail())) {
+            var userDetailsOpt = userDetailsRepository.findByUsername(userDetailsDto.getEmail());
+
+            if (userDetailsOpt.isEmpty()) {
+                throw new NotFoundException("Usuário não encontrado");
+            }
+
+            UserCredentials userCredentials = userDetailsOpt.get();
+            userCredentials.setPassword(new BCryptPasswordEncoder().encode(userDetailsDto.getPassword()));
+
+            userDetailsRepository.save(userCredentials);
+        }
     }
 }
