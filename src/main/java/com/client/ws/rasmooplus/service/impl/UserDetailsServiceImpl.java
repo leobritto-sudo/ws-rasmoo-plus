@@ -7,6 +7,7 @@ import com.client.ws.rasmooplus.repository.jpa.UserDetailsRepository;
 import com.client.ws.rasmooplus.repository.redis.UserRecoveryCodeRepository;
 import com.client.ws.rasmooplus.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    UserRecoveryCodeRepository userRecoveryCodeRepository;
+    private UserRecoveryCodeRepository userRecoveryCodeRepository;
 
     @Autowired
-    MailIntegration mailIntegration;
+    private MailIntegration mailIntegration;
+
+    @Value("${webservices.rasplus.redis.recoverycode.timeout}")
+    private Integer minutesTimeout;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,10 +76,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserRecoveryCode userRecoveryCode = userRecoveryCodeOpt.get();
 
-        if (userRecoveryCode.getCode().equals(code)) {
-            return Boolean.TRUE;
-        }
+        LocalDateTime timeout = userRecoveryCode.getCreationDate().plusMinutes(minutesTimeout);
 
-        return Boolean.FALSE;
+        return userRecoveryCode.getCode().equals(code) && LocalDateTime.now().isBefore(timeout);
     }
 }
