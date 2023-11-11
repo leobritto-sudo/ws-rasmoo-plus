@@ -8,11 +8,11 @@ import com.client.ws.rasmooplus.model.redis.UserRecoveryCode;
 import com.client.ws.rasmooplus.repository.jpa.UserDetailsRepository;
 import com.client.ws.rasmooplus.repository.redis.UserRecoveryCodeRepository;
 import com.client.ws.rasmooplus.service.UserDetailsService;
+import com.client.ws.rasmooplus.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -86,7 +86,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public void updatePasswordByRecoveryCode(UserDetailsDto userDetailsDto) {
-        if (recoveryCodeIsValid(userDetailsDto.getRecoveryCode(), userDetailsDto.getEmail())) {
+        if (Boolean.TRUE.equals(recoveryCodeIsValid(userDetailsDto.getRecoveryCode(), userDetailsDto.getEmail()))) {
             var userDetailsOpt = userDetailsRepository.findByUsername(userDetailsDto.getEmail());
 
             if (userDetailsOpt.isEmpty()) {
@@ -94,7 +94,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
 
             UserCredentials userCredentials = userDetailsOpt.get();
-            userCredentials.setPassword(new BCryptPasswordEncoder().encode(userDetailsDto.getPassword()));
+            userCredentials.setPassword(PasswordUtils.encode(userDetailsDto.getPassword()));
 
             userDetailsRepository.save(userCredentials);
         }
