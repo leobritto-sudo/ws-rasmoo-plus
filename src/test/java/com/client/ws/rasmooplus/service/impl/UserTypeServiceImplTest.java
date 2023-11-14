@@ -23,7 +23,7 @@ class UserTypeServiceImplTest {
     private UserTypeServiceImpl userTypeService;
 
     @Test
-    void testFindAll() {
+    void givenFindAllWhenThereAreDataThenReturnAllData() {
         List<UserType> userTypeList = new ArrayList<>();
         UserType userType1 = new UserType(1L, "Professor", "Professor da plataforma");
         UserType userType2 = new UserType(2L, "Administrador", "Funcionário");
