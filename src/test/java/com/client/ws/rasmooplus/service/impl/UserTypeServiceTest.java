@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class UserTypeServiceImplTest {
+class UserTypeServiceTest {
 
     @Mock
     private UserTypeRepository userTypeRepository;
