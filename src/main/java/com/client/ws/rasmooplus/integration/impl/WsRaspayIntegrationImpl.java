@@ -5,6 +5,7 @@ import com.client.ws.rasmooplus.dto.wsraspay.OrderDTO;
 import com.client.ws.rasmooplus.dto.wsraspay.PaymentDTO;
 import com.client.ws.rasmooplus.integration.WsRaspayIntegration;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,8 +32,8 @@ public class WsRaspayIntegrationImpl implements WsRaspayIntegration {
     private final RestTemplate restTemplate;
 
     private final HttpHeaders headers;
-    public WsRaspayIntegrationImpl() {
-        restTemplate = new RestTemplate();
+    public WsRaspayIntegrationImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         headers = getHttpHeaders();
     }
 
